@@ -63,6 +63,7 @@ export default function BookScreen() {
         {chapters.map((c) => (
           <Pressable
             key={c}
+            testID={`chapter-${c}`}
             style={styles.cell}
             onPress={() =>
               router.push({

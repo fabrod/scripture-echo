@@ -120,6 +120,7 @@ export default function HomeScreen() {
       {QUICK_LISTEN.map((q) => (
         <Pressable
           key={q.label}
+          testID={q.book === 'GEN' && q.chapter === 1 ? 'quick-genesis-1' : undefined}
           style={styles.quickRow}
           onPress={() => play(q.book, q.bookName, q.chapter, q.chapters)}>
           <Text style={styles.quickLabel}>{q.label}</Text>

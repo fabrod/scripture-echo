@@ -6,7 +6,8 @@
  * Until the library is uploaded, chapters without a bundled copy show an
  * honest "being prepared" state in the player — text always works offline.
  */
-export const AUDIO_BASE_URL = 'https://audio.realscripturepath.com';
+export const AUDIO_BASE_URL =
+  process.env.EXPO_PUBLIC_AUDIO_BASE_URL ?? 'https://audio.realscripturepath.com';
 
 export type TranslationCode = 'KJV' | 'WEB' | 'ASV';
 

@@ -1,6 +1,6 @@
 import { DarkTheme, Stack, ThemeProvider } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { SQLiteProvider } from 'expo-sqlite';
+import { SQLiteProvider, type SQLiteDatabase } from 'expo-sqlite';
 import { StatusBar } from 'expo-status-bar';
 import { Suspense, useEffect } from 'react';
 import { ActivityIndicator, View } from 'react-native';
@@ -10,6 +10,22 @@ import { Palette } from '@/constants/Colors';
 import { initAudio, useStore } from '@/lib/store';
 
 SplashScreen.preventAutoHideAsync();
+
+// Version the destination name whenever the bundled scripture database changes.
+// SQLiteProvider only imports an asset when this destination does not exist.
+const SCRIPTURE_DATABASE_NAME = 'scripture-2026-10.db';
+
+async function validateScriptureDatabase(db: SQLiteDatabase) {
+  const result = await db.getFirstAsync<{ count: number }>(
+    `SELECT COUNT(*) AS count
+       FROM books
+      WHERE translation_code = 'ASV'`,
+  );
+
+  if (result?.count !== 66) {
+    throw new Error('The bundled Scripture database could not be initialized.');
+  }
+}
 
 const theme = {
   ...DarkTheme,
@@ -51,8 +67,9 @@ export default function RootLayout() {
   return (
     <Suspense fallback={<Loading />}>
       <SQLiteProvider
-        databaseName="scripture.db"
+        databaseName={SCRIPTURE_DATABASE_NAME}
         assetSource={{ assetId: require('../assets/db/scripture.db') }}
+        onInit={validateScriptureDatabase}
         useSuspense>
         <ThemeProvider value={theme}>
           <Stack

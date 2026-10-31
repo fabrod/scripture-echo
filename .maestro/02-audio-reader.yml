@@ -1,0 +1,34 @@
+appId: com.fabrod.scriptureecho
+name: Bundled ASV audio and reader journey
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "SCRIPTURE ECHO"
+    timeout: 20000
+- tapOn:
+    id: "quick-genesis-1"
+- extendedWaitUntil:
+    visible: "Genesis 1"
+    timeout: 10000
+- assertVisible: "American Standard Version · Narrated by Ron Altman"
+- extendedWaitUntil:
+    visible: "6:16"
+    timeout: 10000
+- assertVisible:
+    id: "player-toggle"
+- tapOn:
+    id: "player-toggle"
+- tapOn:
+    id: "player-toggle"
+
+- tapOn:
+    id: "read-along"
+- extendedWaitUntil:
+    visible: "Genesis 1"
+    timeout: 10000
+- assertVisible: "ASV · tap a verse to save it"
+- assertVisible:
+    id: "verse-1"
+- back
+- assertVisible: "Genesis 1"

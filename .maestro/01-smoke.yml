@@ -1,0 +1,38 @@
+appId: com.fabrod.scriptureecho
+name: Core iOS smoke test
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "SCRIPTURE ECHO"
+    timeout: 20000
+- assertVisible: "The Bible, Beautifully Spoken."
+- assertVisible: "John 1:1 · ASV"
+
+- tapOn:
+    id: "tab-bible"
+- assertVisible:
+    id: "scripture-search"
+- assertVisible: "Old Testament"
+- assertVisible: "Genesis.*50 ch.*"
+- tapOn:
+    id: "scripture-search"
+- inputText: "beginning"
+- extendedWaitUntil:
+    visible: "Genesis 1:1.*"
+    timeout: 10000
+- assertVisible: ".*In the beginning God created the heavens and the earth.*"
+- hideKeyboard
+
+- tapOn:
+    id: "tab-settings"
+- assertVisible: "DEFAULT TRANSLATION"
+- assertVisible: 'American Standard Version \(ASV\).*Ron Altman.*'
+- assertVisible: "100% HUMAN"
+- assertVisible: "FREE FOREVER"
+- assertVisible: "PRIVATE BY DESIGN"
+
+- tapOn:
+    id: "tab-saved"
+- assertVisible: "Tap any verse while reading to bookmark it."
+- assertVisible: "Your listening history will appear here."

@@ -38,6 +38,7 @@ export default function TabLayout() {
           options={{
             title: 'Home',
             headerTitle: 'Scripture Echo',
+            tabBarButtonTestID: 'tab-home',
             tabBarIcon: ({ color }) => <TabIcon name="house.fill" color={color} />,
           }}
         />
@@ -45,6 +46,7 @@ export default function TabLayout() {
           name="bible"
           options={{
             title: 'Bible',
+            tabBarButtonTestID: 'tab-bible',
             tabBarIcon: ({ color }) => <TabIcon name="book.fill" color={color} />,
           }}
         />
@@ -52,6 +54,7 @@ export default function TabLayout() {
           name="listen"
           options={{
             title: 'Listen',
+            tabBarButtonTestID: 'tab-listen',
             tabBarIcon: ({ color }) => (
               <TabIcon name="play.circle.fill" color={color} />
             ),
@@ -61,6 +64,7 @@ export default function TabLayout() {
           name="saved"
           options={{
             title: 'Saved',
+            tabBarButtonTestID: 'tab-saved',
             tabBarIcon: ({ color }) => <TabIcon name="bookmark.fill" color={color} />,
           }}
         />
@@ -68,6 +72,7 @@ export default function TabLayout() {
           name="settings"
           options={{
             title: 'Settings',
+            tabBarButtonTestID: 'tab-settings',
             tabBarIcon: ({ color }) => (
               <TabIcon name="gearshape.fill" color={color} />
             ),

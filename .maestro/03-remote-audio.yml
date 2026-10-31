@@ -1,0 +1,32 @@
+appId: com.fabrod.scriptureecho
+name: Remote audio server integration
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "SCRIPTURE ECHO"
+    timeout: 20000
+- tapOn:
+    id: "tab-bible"
+- tapOn:
+    id: "book-GEN"
+- extendedWaitUntil:
+    visible: "50 chapters · ASV"
+    timeout: 10000
+- tapOn:
+    id: "chapter-4"
+- extendedWaitUntil:
+    visible: "Genesis 4"
+    timeout: 10000
+- tapOn:
+    id: "listen-to-chapter"
+- extendedWaitUntil:
+    visible: "Genesis 4"
+    timeout: 10000
+- assertVisible: "American Standard Version · Narrated by Ron Altman"
+- extendedWaitUntil:
+    visible: 'Genesis 4 · ASV, 0:(?!00)[0-5][0-9] /.*pause'
+    timeout: 15000
+- assertNotVisible: "This chapter’s audio is being prepared"
+- assertVisible:
+    id: "player-toggle"

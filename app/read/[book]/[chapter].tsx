@@ -100,17 +100,22 @@ export default function ReaderScreen() {
         <Text style={styles.sub}>{translation} · tap a verse to save it</Text>
         <View style={styles.textBlock}>
           {verses.map((v) => (
-            <Text
+            <Pressable
               key={v.verse}
-              style={[
-                styles.verse,
-                { fontSize, lineHeight },
-                selected === v.verse && styles.verseSelected,
-              ]}
+              testID={`verse-${v.verse}`}
+              accessibilityRole="button"
+              accessibilityLabel={`${book.name} ${chapter}:${v.verse}. ${v.text}`}
               onPress={() => void onSelectVerse(v.verse)}>
-              <Text style={styles.verseNum}>{v.verse} </Text>
-              {v.text}{' '}
-            </Text>
+              <Text
+                style={[
+                  styles.verse,
+                  { fontSize, lineHeight },
+                  selected === v.verse && styles.verseSelected,
+                ]}>
+                <Text style={styles.verseNum}>{v.verse} </Text>
+                {v.text}{' '}
+              </Text>
+            </Pressable>
           ))}
         </View>
 
@@ -158,6 +163,7 @@ export default function ReaderScreen() {
       </ScrollView>
 
       <Pressable
+        testID="listen-to-chapter"
         style={styles.listenFab}
         onPress={() => {
           if (!isCurrentChapter) {

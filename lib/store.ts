@@ -8,6 +8,7 @@
 import {
   createAudioPlayer,
   setAudioModeAsync,
+  setIsAudioActiveAsync,
   type AudioPlayer,
   type AudioStatus,
 } from 'expo-audio';
@@ -73,6 +74,8 @@ let lastHistoryWrite = 0;
 function ensurePlayer(): AudioPlayer {
   if (!player) {
     player = createAudioPlayer(null, { updateInterval: 500 });
+    player.muted = false;
+    player.volume = 1;
     player.addListener('playbackStatusUpdate', onStatus);
   }
   return player;
@@ -238,6 +241,7 @@ export const useStore = create<Store>()((set, get) => ({
 
 /** Call once at app start: background-capable, plays in silent mode. */
 export async function initAudio(): Promise<void> {
+  await setIsAudioActiveAsync(true);
   await setAudioModeAsync({
     playsInSilentMode: true,
     shouldPlayInBackground: true,

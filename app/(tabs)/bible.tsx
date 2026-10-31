@@ -74,6 +74,7 @@ export default function BibleScreen() {
         ))}
       </View>
       <TextInput
+        testID="scripture-search"
         style={styles.search}
         placeholder="Search the Scriptures…"
         placeholderTextColor={Palette.muted}
@@ -118,6 +119,7 @@ export default function BibleScreen() {
               {section.data.map((b) => (
                 <Pressable
                   key={b.code}
+                  testID={`book-${b.code}`}
                   style={styles.bookRow}
                   onPress={() =>
                     router.push({

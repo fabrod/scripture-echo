@@ -10,10 +10,11 @@ no tracking. By Real Scripture Path Inc. · realscripturepath.com
 **Translations (all public domain, bundled locally — reading works fully offline):**
 King James Version (primary) · World English Bible · American Standard Version
 
-**Audio:** pre-rendered chapter narration hosted on our own infrastructure,
-with offline downloads, background playback, lock-screen controls, playback
-speeds (0.75x–2x), sleep timer, and resume. See `CONTENT_LICENSES.md` for the
-narration licensing rules and `docs/AUDIO_DECISION.md` for the voice decision.
+**Audio:** ASV Genesis 1–3 are bundled for offline playback. Other chapters
+use pre-rendered files from `https://audio.realscripturepath.com` following the
+path `{translation}/{BOOK}/{chapter}.mp3`. The hosted library must be deployed
+before those chapters are advertised as available. See `CONTENT_LICENSES.md`
+and `docs/AUDIO_DECISION.md` for sources and licensing.
 
 ## Stack
 
@@ -30,6 +31,35 @@ npx tsc --noEmit        # typecheck
 npx expo lint           # lint
 npx expo-doctor         # project health
 ```
+
+## Native iOS end-to-end tests
+
+Cypress cannot drive a native iOS app. The committed Maestro flows exercise
+the locally compiled app on an iOS Simulator using the production bundle ID.
+They cover the database/navigation/settings smoke path, bundled ASV playback
+and reading, and remote-server playback for a non-bundled chapter.
+
+```bash
+npx expo run:ios
+npm run test:e2e:ios
+```
+
+The local machine needs Java 17+ and the Maestro CLI. See Expo's Maestro E2E
+guide and the Maestro installation documentation before running the suite on
+a new Mac.
+
+For the remote-audio integration flow, serve a fixture using the production
+folder layout and start Metro with a local host override:
+
+```bash
+mkdir -p /tmp/scripture-echo-audio/asv/GEN
+ln -sf "$PWD/assets/audio/asv-gen-001.mp3" /tmp/scripture-echo-audio/asv/GEN/004.mp3
+python3 -m http.server 8099 --bind 127.0.0.1 --directory /tmp/scripture-echo-audio
+EXPO_PUBLIC_AUDIO_BASE_URL=http://127.0.0.1:8099 npx expo start --clear
+```
+
+The production build uses `https://audio.realscripturepath.com` whenever the
+override is absent.
 
 ## Scripture data pipeline
 
@@ -52,4 +82,4 @@ eas build --platform ios --profile production
 eas submit --platform ios
 ```
 
-Bundle ID: `com.fabrod.scripturepathaudio` · Name: Scripture Path Audio Bible
+Bundle ID: `com.fabrod.scriptureecho` · Name: Scripture Echo

@@ -39,6 +39,7 @@ function CtrlBtn({
   const size = big ? 76 : 52;
   return (
     <Pressable
+      testID={big ? 'player-toggle' : undefined}
       style={[
         styles.ctrl,
         {
@@ -179,6 +180,7 @@ export default function ListenScreen() {
       </View>
 
       <Pressable
+        testID="read-along"
         style={styles.readAlong}
         onPress={() =>
           router.push({
