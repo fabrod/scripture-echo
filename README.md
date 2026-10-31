@@ -4,17 +4,33 @@
 
 A completely free iPhone app for listening to and reading God's Word —
 100% human narration (no AI voices), no ads, no subscriptions, no accounts,
-no tracking. By Real Scripture Path Inc. · realscripturepath.com
-© 2026 Real Scripture Path Inc.
+no tracking.
 
-**Translations (all public domain, bundled locally — reading works fully offline):**
-King James Version (primary) · World English Bible · American Standard Version
+**Scripture text:** King James Version (primary), World English Bible, and
+American Standard Version are public domain and bundled in the app's SQLite
+asset. Reading, searching, bookmarks, and navigation work with zero internet.
+There is no production text API or remote database.
 
-**Audio:** ASV Genesis 1–3 are bundled for offline playback. Other chapters
-use pre-rendered files from `https://audio.realscripturepath.com` following the
-path `{translation}/{BOOK}/{chapter}.mp3`. The hosted library must be deployed
-before those chapters are advertised as available. See `CONTENT_LICENSES.md`
-and `docs/AUDIO_DECISION.md` for sources and licensing.
+**Human audio:** Narration comes from public-domain LibriVox recordings by
+volunteer readers. Production chapter MP3s are stored as ordinary objects in a
+Cloudflare R2 bucket and delivered through
+`https://audio.scriptureecho.app`. R2 is file storage, not a separate
+streaming platform. The app requests files using this layout:
+
+```text
+https://audio.scriptureecho.app/{translation}/{BOOK}/{chapter}.mp3
+
+asv/GEN/001.mp3
+kjv/GEN/001.mp3
+web/GEN/001.mp3
+```
+
+Translation directories are lowercase, OSIS book codes are uppercase, and
+chapter numbers are three digits. The repository currently contains three ASV
+Genesis files used as development/test fixtures; the complete production
+library belongs in R2 and can be updated without releasing a new app build.
+See `CONTENT_LICENSES.md` and `docs/AUDIO_DECISION.md` for sources, narrator
+credits, and licensing.
 
 ## Stack
 
@@ -58,8 +74,35 @@ python3 -m http.server 8099 --bind 127.0.0.1 --directory /tmp/scripture-echo-aud
 EXPO_PUBLIC_AUDIO_BASE_URL=http://127.0.0.1:8099 npx expo start --clear
 ```
 
-The production build uses `https://audio.realscripturepath.com` whenever the
-override is absent.
+The production build uses `https://audio.scriptureecho.app` whenever the
+override is absent. This separate domain is planned but is not registered or
+active yet. Before App Store submission, the R2 custom domain must be active
+over HTTPS and representative chapters from ASV, KJV, and WEB must be played
+successfully in a TestFlight build on a physical iPhone.
+
+## Production audio hosting
+
+The production audio dependency is deliberately simple:
+
+1. A Cloudflare R2 bucket contains the chapter MP3 objects.
+2. The bucket's custom domain is `audio.scriptureecho.app`.
+3. The app downloads or plays the requested chapter directly from that domain.
+4. Scripture text remains local even if the device is offline or R2 is
+   temporarily unavailable.
+
+No application server, audio database, account system, or paid narration API
+is required. A production audio deployment is ready only when:
+
+- every advertised chapter exists at the expected path;
+- objects return HTTPS success responses with an audio MIME type;
+- seeking/playback works through the custom domain;
+- missing chapters produce the app's unavailable state instead of a crash;
+- all three translations pass the TestFlight playback smoke test.
+
+The Cloudflare setup status and exact next steps are recorded in
+[`docs/CLOUDFLARE_HANDOFF.md`](docs/CLOUDFLARE_HANDOFF.md). Scripture Echo is
+independent from `realscripturepath.com`; do not use, connect, or modify that
+domain for this project.
 
 ## Scripture data pipeline
 
@@ -78,8 +121,8 @@ Validation results (2026-10-31): KJV 31,102 verses exact; WEB 31,103 slots
 ## Builds (run on the developer Mac)
 
 ```bash
-eas build --platform ios --profile production
-eas submit --platform ios
+npx eas-cli@latest build --platform ios --profile production
+npx eas-cli@latest submit --platform ios
 ```
 
 Bundle ID: `com.fabrod.scriptureecho` · Name: Scripture Echo

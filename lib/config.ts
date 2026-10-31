@@ -7,7 +7,7 @@
  * honest "being prepared" state in the player — text always works offline.
  */
 export const AUDIO_BASE_URL =
-  process.env.EXPO_PUBLIC_AUDIO_BASE_URL ?? 'https://audio.realscripturepath.com';
+  process.env.EXPO_PUBLIC_AUDIO_BASE_URL ?? 'https://audio.scriptureecho.app';
 
 export type TranslationCode = 'KJV' | 'WEB' | 'ASV';
 
